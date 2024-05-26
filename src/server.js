@@ -29,7 +29,7 @@ export const setupServer = () => {
     });
   });
 
-  app.get('/contacts/:contactId', async (req, res) => {
+  app.get('/contacts/:contactId', async (req, res, next) => {
     try {
       const id = req.params.contactId;
       const contact = await getContactById(id);
@@ -47,16 +47,20 @@ export const setupServer = () => {
         data: contact,
       });
     } catch (err) {
-      res.status(500).json({
-        message: 'Id is not valid!',
-        error: err.message,
-      });
+      next(err);
     }
   });
 
   app.use('*', (req, res) => {
     res.status(404).json({
       message: 'Not found',
+    });
+  });
+
+  app.use((err, req, res, next) => {
+    res.status(500).json({
+      message: 'Something went wrong',
+      error: err.message,
     });
   });
 
