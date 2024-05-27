@@ -11,3 +11,22 @@ export const getContactById = async (id) => {
 export const createContact = async (payload) => {
   return await Contact.create(payload);
 };
+
+export const deleteContact = async (id) => {
+  const contact = await Contact.findOneAndDelete({
+    _id: id,
+  });
+  return contact;
+};
+
+export const updateContact = async (id, payload) => {
+  const rawResult = await Contact.findOneAndUpdate({
+    _id: id,
+  }, payload);
+
+  // if (!rawResult || !rawResult.value) return null;
+
+  return {
+    contact: rawResult.value,
+  };
+};
