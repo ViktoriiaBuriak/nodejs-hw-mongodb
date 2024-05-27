@@ -7,3 +7,7 @@ export const getAllContacts = async () => {
 export const getContactById = async (id) => {
   return await Contact.findById(id);
 };
+
+export const createContact = async (payload) => {
+  return await Contact.create(payload);
+};
