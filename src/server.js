@@ -4,6 +4,7 @@ import cors from 'cors';
 import { env } from './utils/env.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
 import { envVars } from './constants/envVars.js';
+import mongoose from 'mongoose';
 
 const PORT = env(envVars.PORT, 3000);
 
@@ -32,6 +33,14 @@ export const setupServer = () => {
   app.get('/contacts/:contactId', async (req, res, next) => {
     try {
       const id = req.params.contactId;
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+          status: 400,
+          message: `Invalid contact ID: ${id}`,
+        });
+      }
+
       const contact = await getContactById(id);
 
       if (!contact) {
