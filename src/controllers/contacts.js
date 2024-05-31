@@ -83,7 +83,6 @@ export const patchContactController = async (req, res, next) => {
   });
 };
 
-
 export const putContactController = async (req, res, next) => {
   const id = req.params.contactId;
 

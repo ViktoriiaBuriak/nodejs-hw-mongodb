@@ -21,14 +21,17 @@ export const deleteContact = async (id) => {
 };
 
 export const updateContact = async (id, payload, options = {}) => {
-  const rawResult = await Contact.findOneAndUpdate({
-    _id: id,
-  }, payload,
+  const rawResult = await Contact.findOneAndUpdate(
+    {
+      _id: id,
+    },
+    payload,
     {
       new: true,
       includeResultMetadata: true,
-      ...options
-  });
+      ...options,
+    },
+  );
 
   if (!rawResult || !rawResult.value) {
     throw createHttpError(404, 'Contact not found');
@@ -36,6 +39,6 @@ export const updateContact = async (id, payload, options = {}) => {
 
   return {
     contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted)
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
