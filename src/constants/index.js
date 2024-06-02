@@ -5,3 +5,8 @@ export const envVars = {
   MONGODB_URL: 'MONGODB_URL',
   MONGODB_DB: 'MONGODB_DB',
 };
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
