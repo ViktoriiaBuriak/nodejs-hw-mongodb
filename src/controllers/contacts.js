@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import {
   createContact,
   deleteContact,
@@ -9,15 +8,19 @@ import {
 import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+
   const contacts = await getAllContacts({
     page,
     perPage,
     sortBy,
-    sortOrder
+    sortOrder,
+    filter,
   });
   res.json({
     status: 200,
@@ -28,11 +31,6 @@ export const getContactsController = async (req, res) => {
 
 export const getContactByIdController = async (req, res, next) => {
   const id = req.params.contactId;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    next(createHttpError(400, `Invalid contact ID: ${id}`));
-    return;
-  }
 
   const contact = await getContactById(id);
 
@@ -60,11 +58,6 @@ export const createContactController = async (req, res) => {
 export const deleteContactController = async (req, res, next) => {
   const id = req.params.contactId;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    next(createHttpError(400, `Invalid contact ID: ${id}`));
-    return;
-  }
-
   const contact = await deleteContact(id);
 
   if (!contact) {
@@ -75,13 +68,8 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-export const patchContactController = async (req, res, next) => {
+export const patchContactController = async (req, res) => {
   const id = req.params.contactId;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    next(createHttpError(400, `Invalid contact ID: ${id}`));
-    return;
-  }
 
   const result = await updateContact(id, req.body);
 
@@ -92,13 +80,8 @@ export const patchContactController = async (req, res, next) => {
   });
 };
 
-export const putContactController = async (req, res, next) => {
+export const putContactController = async (req, res) => {
   const id = req.params.contactId;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    next(createHttpError(400, `Invalid contact ID: ${id}`));
-    return;
-  }
 
   const result = await updateContact(id, req.body, {
     upsert: true,
