@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 import { Contact } from '../db/models/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
+import { saveFile } from '../utils/saveFile.js';
 
 export const getAllContacts = async ({
   page = 1,
@@ -50,9 +51,12 @@ export const getContactById = async (id, userId) => {
   return await Contact.findOne({ _id: id, userId });
 };
 
-export const createContact = async (payload, userId) => {
+export const createContact = async ({ photo, ...payload }, userId) => {
+  const url = await saveFile(photo);
+
   const contactData = {
     ...payload,
+    photo: url,
     userId,
   };
 
@@ -67,13 +71,20 @@ export const deleteContact = async (id, userId) => {
   return contact;
 };
 
-export const updateContact = async (id, payload, userId, options = {}) => {
+export const updateContact = async (
+  id,
+  { photo, ...payload },
+  userId,
+  options = {},
+) => {
+  const url = await saveFile(photo);
+
   const rawResult = await Contact.findOneAndUpdate(
     {
       _id: id,
       userId,
     },
-    payload,
+    { ...payload, photo: url },
     {
       new: true,
       includeResultMetadata: true,

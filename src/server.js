@@ -2,13 +2,13 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import { env } from './utils/env.js';
-import { envVars } from './constants/index.js';
+import { ENV_VARS, UPLOAD_DIR } from './constants/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 
-const PORT = env(envVars.PORT, 3000);
+const PORT = env(ENV_VARS.PORT, 3000);
 
 export const setupServer = () => {
   const app = express();
@@ -25,6 +25,8 @@ export const setupServer = () => {
   app.use(cors());
 
   app.use(cookieParser());
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.use(router);
 

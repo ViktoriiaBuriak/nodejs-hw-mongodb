@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 import { env } from '../utils/env.js';
-import { envVars } from '../constants/index.js';
+import { ENV_VARS } from '../constants/index.js';
 
 export const initMongoConnection = async () => {
-  const connectionLink = `mongodb+srv://${env(envVars.MONGODB_USER)}:${env(
-    envVars.MONGODB_PASSWORD,
-  )}@${env(envVars.MONGODB_URL)}/${env(
-    envVars.MONGODB_DB,
+  const connectionLink = `mongodb+srv://${env(ENV_VARS.MONGODB_USER)}:${env(
+    ENV_VARS.MONGODB_PASSWORD,
+  )}@${env(ENV_VARS.MONGODB_URL)}/${env(
+    ENV_VARS.MONGODB_DB,
   )}?retryWrites=true&w=majority&appName=Cluster0`;
 
   try {
