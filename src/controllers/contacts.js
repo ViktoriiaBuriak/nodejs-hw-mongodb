@@ -75,12 +75,17 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
-export const patchContactController = async (req, res) => {
+export const patchContactController = async (req, res, next) => {
   const id = req.params.contactId;
   const userId = req.user._id;
   const { body, file } = req;
 
   const result = await updateContact(id, { ...body, photo: file }, userId);
+
+  if (!result) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
 
   res.json({
     status: 200,
