@@ -18,7 +18,32 @@ requestBody:
   content:
     multipart/form-data:
       schema:
-        $ref: ..\..\..\components\schemas\updateContact.yaml     
+        type: object
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: "Contact's phoneNumber"
+            type: string
+            example: "+380000000222"
+          email:
+            description: "Contact's email"
+            type: string
+            example: "example@example.com"
+          isFavourite:
+            description: "Whether is contact favourite"
+            type: boolean
+            example: false
+          contactType:
+            description: "Contact's type"
+            type: string
+            enum: ['work', 'home', 'personal']
+          photo:
+            description: "Link to user's photo"
+            type: string
+            format: binary     
 responses:
   '200':
     description: 'Update contact by id'
