@@ -29,7 +29,9 @@ export const registerUser = async (payload) => {
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
   return await usersCollection.create({
-    ...payload,
+    name: payload.name,
+    email: payload.email,
+    // ...payload,
     password: encryptedPassword,
   });
 };
@@ -53,13 +55,21 @@ export const loginUser = async (payload) => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
-  return sessionsCollection.create({
+  const session = await sessionsCollection.create({
     userId: user._id,
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   });
+
+  return {
+    session,
+    user: {
+      name: user.name,
+      email: user.email
+    }
+  };
 };
 
 export const logoutUser = async (sessionId) => {

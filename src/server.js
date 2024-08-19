@@ -23,7 +23,17 @@ export const setupServer = () => {
     }),
   );
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: [
+        'http://localhost:5173',
+        'https://goit-react-hw-08-delta-seven.vercel.app',
+      ],
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }),
+  );
 
   app.use(cookieParser());
 
